@@ -10,7 +10,7 @@ using namespace std;
 #define STAGE6  false
 #define STAGE7  false
 #define STAGE8  false
-#define STAGE9  false
+#define STAGE9  true
 #define STAGE10 false
 
 //If your stage detects bad input from the user, return BAD_INPUT
@@ -137,11 +137,11 @@ int function9() {
 	//A lambda is a function that you can declare inside another function
 	//This one recursively computes the sum of all values 1 to N
 	//And returns an INT
-	auto lambda = [](int x, auto &&lambda) -> bool { 
-		if (x <= 1) return 1;
-		return x+lambda(x-1); //What am I missing here?
+	auto lambda = [&](int x, auto &&lambda) -> int { // added & and changed from bool to integer 
+		if (x == 1) return 1; //fixed logic here
+		return x + lambda(x - 1, lambda); //What am I missing here?
 	};
-	return lambda(N,lambda);
+	return lambda(N, lambda); // fixed spacing in multiple places and logic errors 
 }
 #else
 int function9() {
