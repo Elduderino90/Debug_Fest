@@ -9,8 +9,8 @@
 using namespace std;
 
 //When you complete a stage, set the next stage's 'false' to be 'true'
-#define STAGE6  true
-#define STAGE7  false
+#define STAGE6  false
+#define STAGE7  true
 #define STAGE8  false
 #define STAGE9  false
 #define STAGE10 false
@@ -84,6 +84,7 @@ int function6() {
 //Example 6: 1 1 1 1. Output: 0
 //Example 7: 0 1 1 1. Output: 0
 int function7() {
+<<<<<<< HEAD
 
 	int donate = read("Did your show donate to glorious leader? (1 = yes, 0 = no):\n");
 
@@ -97,6 +98,15 @@ int function7() {
 		return BAD_INPUT;
 	//return NOT_IMPLEMENTED;
 	return donate + promote + eurovision - insult >= 2;
+=======
+	int donate = read("Did your show donate to glorious leader? (1 = yes, 0 = no):\n");
+	int promote = read("Does your show promote our values? (1 = yes, 0 = no):\n");  // added a ? and corrected spacing
+	int eurovision = read("Is this show Eurovision? (1 = yes, 0 = no):\n");
+	int insult = read("Has your show ever insulted glorious leader? (1 = yes, 0 = no):\n");
+	if (donate < 0 || donate > 1 || promote < 0 || promote > 1 || eurovision < 0 || eurovision > 1 || insult < 0 || insult > 1) //removed extra spacing and changed or to || and replaced do with donate because do is a C++ command
+		return NOT_IMPLEMENTED;
+	return ((donate + promote + eurovision - insult) >= 2); //added parenthesis
+>>>>>>> stage7
 }
 #else
 int function7() {
