@@ -10,8 +10,8 @@ using namespace std;
 
 //When you complete a stage, set the next stage's 'false' to be 'true'
 #define STAGE6  false
-#define STAGE7  true
-#define STAGE8  false
+#define STAGE7  false
+#define STAGE8  true
 #define STAGE9  false
 #define STAGE10 false
 
@@ -84,21 +84,6 @@ int function6() {
 //Example 6: 1 1 1 1. Output: 0
 //Example 7: 0 1 1 1. Output: 0
 int function7() {
-<<<<<<< HEAD
-
-	int donate = read("Did your show donate to glorious leader? (1 = yes, 0 = no):\n");
-
-	int promote = read("Does your show promote our value? (1 = yes, 0 = no):\n"); // added a ?
-
-	int eurovision = read("Is this show Eurovision? (1 = yes, 0 = no):\n");
-
-	int insult = read("Has your show ever insulted glorious leader? (1 = yes, 0 = no):\n");
-	//removed spacing, also changed (or) to (||)
-	if (donate < 0 || donate > 1 || promote < 0 || promote > 1 || eurovision < 0 || eurovision > 1 || insult < 0 || insult > 1)
-		return BAD_INPUT;
-	//return NOT_IMPLEMENTED;
-	return donate + promote + eurovision - insult >= 2;
-=======
 	int donate = read("Did your show donate to glorious leader? (1 = yes, 0 = no):\n");
 	int promote = read("Does your show promote our values? (1 = yes, 0 = no):\n");  // added a ? and corrected spacing
 	int eurovision = read("Is this show Eurovision? (1 = yes, 0 = no):\n");
@@ -106,7 +91,6 @@ int function7() {
 	if (donate < 0 || donate > 1 || promote < 0 || promote > 1 || eurovision < 0 || eurovision > 1 || insult < 0 || insult > 1) //removed extra spacing and changed or to || and replaced do with donate because do is a C++ command
 		return NOT_IMPLEMENTED;
 	return ((donate + promote + eurovision - insult) >= 2); //added parenthesis
->>>>>>> stage7
 }
 #else
 int function7() {
@@ -133,18 +117,17 @@ int function7() {
 int function8() {
 	string s1 = read("Type in the first word:\n");
 	string s2 = read("Type in the second word:\n");
-	string vowels = "AEIOU"; //; is a Greek Semicolon // corrected this
 
-	if (s1.size() < 12 || s2.size() > 12 || s1.size() < 3 || s2.size() > 3)
-		return BAD_INPUT;
-
-	for (char &c : s1) c = toupper(c); //Uppercaseify s1
-	for (char &c : s2) c = toupper(c); //Uppercaseify s2
-	//try {
-	return s1.substr(s2.find_last_of(vowels)) == s2.substr(s1.find_last_of(vowels));
-} //catch (...) {
-//return BAD_INPUT;
-
+	string vowels = "AEIOU"; //; is a Greek Semicolon // added quotation marks
+	if (s1.size() < 3 || s1.size() > 12 || s2.size() < 3 || s2.size() > 12) return BAD_INPUT;
+	for (char &c : s1) c = toupper(c); //Uppercaseify s1 // added spacing
+	for (char &c : s2) c = toupper(c); //Uppercaseify s2 // changed tolower - toupper
+	try {
+		return s1.substr(s1.find_last_of(vowels)) == s2.substr(s2.find_last_of(vowels));
+	} catch (...) {
+		return BAD_INPUT
+	}
+}
 
 #else
 int function8() {
