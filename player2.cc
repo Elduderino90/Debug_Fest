@@ -51,7 +51,7 @@ int function6() {
 	while (true) {
 		int roll = rand() % 100 + 1;  // added + 1
 		pulls++; // moved pulls++ to here from line 59
-		cout << roll << " vs " << chance << endl;  //changed (cerr) to (cout)
+		cerr << roll << " vs " << chance << endl; 
 
 		if (roll <= chance) {  // added equal sign
 			break; // added break;
