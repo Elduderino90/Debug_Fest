@@ -4,6 +4,8 @@
 #include <algorithm> // IWYU pragma: keep
 #include <numeric> // IWYU pragma: keep
 #include <cstring> // IWYU pragma: keep
+#include <iostream> //added 
+#include <cstdlib> //added
 using namespace std;
 
 //When you complete a stage, set the next stage's 'false' to be 'true'
@@ -22,8 +24,8 @@ enum RETVAL { NOT_IMPLEMENTED = -100, BAD_INPUT = -200};
 // You will then input the base percentage chance to hit a 5-star gatcha
 // You will then input how much pity (how much the chance goes up each miss) the player has
 // You will output how many pulls it takes to get your 5-star gatcha
-//For example: with a base chance of 5 (5%) and a increase_chance of 2, if you fail the next one has a chance of 
-// 7% to hit. If that fails, it increases to 9%, etc. 
+//For example: with a base chance of 5 (5%) and a increase_chance of 2, if you fail the next one has a chance of
+// 7% to hit. If that fails, it increases to 9%, etc.
 //The return value is how many pulls total it took to hit
 //If chance or increase_chance are outside the range of 1 to 100 return BAD_INPUT
 //Example 1: Seed 1, Base Chance 10, Increase Chance 2 = 4 pulls to win
@@ -34,17 +36,27 @@ enum RETVAL { NOT_IMPLEMENTED = -100, BAD_INPUT = -200};
 int function6() {
 	int seed = read("Input Random Seed:\n");
 	srand(seed);
-	int base-chance = read("Input Base Chance:\n");
+
+	int base_chance = read("Input Base Chance:\n");
+
 	int increase_chance = read("Input Chance Goes Up Per Miss:\n");
-	if (base_chance < 1 and base_chance > 100 and increase_chance < 1 and increase_chance > 100) return BAD_INPUT;
+
+	//changed (and) to (||)
+	if (base_chance < 1 || base_chance > 100 || increase_chance < 1 || increase_chance > 100)
+		return BAD_INPUT;
+
 	int pulls = 0;
 	int chance = base_chance;
+
 	while (true) {
-		int roll = rand() % 100;
-		//cerr << roll << " vs " << chance << endl;
-		if (roll < chance) return pulls;
-		chance += -increase_chance; //We failed, so increase our odds next time
-		pulls++; 
+		int roll = rand() % 100 + 1;  // added + 1
+		pulls++; // moved pulls++ to here from line 59
+		cerr << roll << " vs " << chance << endl; 
+
+		if (roll <= chance) {  // added equal sign
+			break; // added break;
+		}
+		chance += increase_chance; //We failed, so increase our odds next time
 	}
 	return 0;
 }
@@ -72,16 +84,19 @@ int function6() {
 //Example 6: 1 1 1 1. Output: 0
 //Example 7: 0 1 1 1. Output: 0
 int function7() {
-	int do         = read("Did your show donate to glorious leader? (1 = yes, 0 = no):\n");
-	int promote    = read("Does your show promote our values (1 = yes, 0 = no):\n");
+
+	int donate = read("Did your show donate to glorious leader? (1 = yes, 0 = no):\n");
+
+	int promote = read("Does your show promote our value? (1 = yes, 0 = no):\n"); // added a ?
+
 	int eurovision = read("Is this show Eurovision? (1 = yes, 0 = no):\n");
-	int insult     = read("Has your show ever insulted glorious leader? (1 = yes, 0 = no):\n");
-	if (do < 0 or do > 1 or
-			promote < 0 or promote > 1 or
-			eurovision < 0 or eurovision > 1 or
-			insult < 0 or insult > 1)
-		return NOT_IMPLEMENTED;
-	return do + promote + eurovision - insult >= 2;
+
+	int insult = read("Has your show ever insulted glorious leader? (1 = yes, 0 = no):\n");
+	//removed spacing, also changed (or) to (||)
+	if (donate < 0 || donate > 1 || promote < 0 || promote > 1 || eurovision < 0 || eurovision > 1 || insult < 0 || insult > 1)
+		return BAD_INPUT;
+	//return NOT_IMPLEMENTED;
+	return donate + promote + eurovision - insult >= 2;
 }
 #else
 int function7() {
@@ -108,16 +123,19 @@ int function7() {
 int function8() {
 	string s1 = read("Type in the first word:\n");
 	string s2 = read("Type in the second word:\n");
-	string vowels = AEIOU; //; is a Greek Semicolon
-	if (s1.size() < 3 or s1.size() > 12 or s2.size() < 3 or s2.size() > 12) return BAD_INPUT;
-	for (char &c:s1) c = toupper(c); //Uppercaseify s1
-	for (char &c:s2) c = tolower(c); //Uppercaseify s2
-	try {
-		return s1.substr(s2.find_last_of(vowels)) == s2.substr(s1.find_last_of(vowels));
-	} catch (...) {
-		return BAD_INPUT
-	}
-}
+	string vowels = "AEIOU"; //; is a Greek Semicolon // corrected this
+
+	if (s1.size() < 12 || s2.size() > 12 || s1.size() < 3 || s2.size() > 3)
+		return BAD_INPUT;
+
+	for (char &c : s1) c = toupper(c); //Uppercaseify s1
+	for (char &c : s2) c = toupper(c); //Uppercaseify s2
+	//try {
+	return s1.substr(s2.find_last_of(vowels)) == s2.substr(s1.find_last_of(vowels));
+} //catch (...) {
+//return BAD_INPUT;
+
+
 #else
 int function8() {
 	return NOT_IMPLEMENTED;
@@ -125,7 +143,7 @@ int function8() {
 #endif
 
 #if STAGE9 == true
-//This code is pretty simple. Just add up the values from 1 to N. 
+//This code is pretty simple. Just add up the values from 1 to N.
 //If a value < 1 is entered, return BAD_INPUT
 //Example 1: 10. Output: 55
 //Example 2: 0. Output: BAD_INPUT
@@ -134,14 +152,15 @@ int function8() {
 int function9() {
 	int N = read("Enter a number N to sum up to:\n");
 	if (N < 1) return BAD_INPUT;
+
 	//A lambda is a function that you can declare inside another function
 	//This one recursively computes the sum of all values 1 to N
 	//And returns an INT
-	auto lambda = [](int x, auto &&lambda) -> bool { 
-		if (x <= 1) return 1;
-		return x+lambda(x-1); //What am I missing here?
+	auto lambda = [](int x, auto &&lambda) -> int { // changed bool to int
+		if (x < 1) return 1; //removed (=)
+		return x + lambda(x - 1, lambda); //What am I missing here? //added lambda
 	};
-	return lambda(N,lambda);
+	return lambda(N, lambda);
 }
 #else
 int function9() {
@@ -182,17 +201,21 @@ int function9() {
 //Return value: 0
 
 int function10() {
-	vector<string> emoji = {"6️⃣7️⃣","⛵","🏴‍☠️","🦜","⚔️","🪢","🪙","🦪","⚫","🎩","🎤","🎶","😺"};
-	const char *alpha = “ABCDEFGHIJKLMNOPQRSTUVWXYZ”; //C Style String
-	const char *consonants = "BCDFGHJKLMNPQRSTVWXYZ";
+	vector<string> emoji = {"6️⃣7️⃣", "⛵", "🏴‍☠️", "🦜", "⚔️", "🪢", "🪙", "🦪", "⚫", "🎩", "🎤", "🎶", "😺"};
+
+	const char *alpha = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"; //C Style String
+	const char *consonants = "BCDFGHJKLMNPQRSTVWXYZ"; // fixed quotes
 	const char *vowels = "AEIOU";
+
 	int seed = read("Please enter a random seed:\n");
 	srand(seed);
+
 	int count = 0;
+
 	while (true) {
-		string flag = emoji.at(rand()%emoji.size());
-		auto random_letter = [&](const char *str) {
-			return *((str+rand()%strlen(str))+1);
+		string flag = emoji.at(rand() % emoji.size());
+		auto random_letter = [](const char *str) { // removed &
+			return str[rand() % strlen(str)]; //removed * and added []
 		};
 		//Random Name Generator
 		string name;
@@ -201,9 +224,12 @@ int function10() {
 		name.push_back(random_letter(vowels));
 		name.push_back(random_letter(consonants));
 		cerr << "A pirate named " << name << endl;
-		if (rand() % 10 < 0.33) break; //10% chance to terminate loop
 		cerr << "Did this: " << flag << " to..." << endl;
+
 		count++;
+
+		if (rand() % 10 < 1) break; //10% chance to terminate loop
+
 	}
 	return count;
 }
