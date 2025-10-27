@@ -72,7 +72,7 @@ int function2() {
 	int seed = read("What seed should we use for the random number generator?\n");
 	int sum = 0;
 
-	srand(seed): // took out for loop cuz needs to generate once not 20 times
+	srand(seed); // took out for loop cuz needs to generate once not 20 times
 	for (int i = 0; i <= 20; i++) {
 		
 		sum += (rand() % 6) + 1;
