@@ -92,9 +92,8 @@ int function2() {
 //Example: "Stairway to Heaven" is input. Output: 0
 int function3() {
 	cout << "Stevie Nicks was the lead singer for Fleetwood Mac and also had a solo career.\n";
-	cout << "Please enter the name of a song and we will return 1 if it is one of her songs, 0 otherwise.\n";
-	string song;
-	getline(cin >> ws,  song);
+	string song = readline("Please enter the name of a song and we will return 1 if it is one of her songs, 0 otherwise.\n");
+
 	if (song == "The Chain") {
 		return 1;
 	} else if (song == "Edge of Seventeen") {
