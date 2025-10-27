@@ -9,9 +9,9 @@ using namespace std;
 //When you complete a stage, set the next stage's 'false' to be 'true'
 #define STAGE1 true
 #define STAGE2 true
-#define STAGE3 false
-#define STAGE4 false
-#define STAGE5 false
+#define STAGE3 true
+#define STAGE4 true
+#define STAGE5 true
 
 //If your stage isn't implemented, it should return NOT_IMPLEMENTED
 //If your stage detects bad input from the user, return BAD_INPUT
@@ -92,16 +92,13 @@ int function2() {
 //Example: "Stairway to Heaven" is input. Output: 0
 int function3() {
 	cout << "Stevie Nicks was the lead singer for Fleetwood Mac and also had a solo career.\n";
-	cout << "Please enter the name of a song and we will return 1 if it is one of her songs, 0 otherwise.\n";
-	string song;
-	cin >> song;
+	string song = readline("Please enter the name of a song and we will return 1 if it is one of her songs, 0 otherwise.\n");
+
 	if (song == "The Chain") {
 		return 1;
 	} else if (song == "Edge of Seventeen") {
 		return 1;
-	} else
-		return 0;
-	else if (song == "Stop Draggin' My Heart Around") {
+	} else if (song == "Stop Draggin' My Heart Around") {
 		return 1;
 	} else if (song == "Stand Back") {
 		return 1;
@@ -109,8 +106,9 @@ int function3() {
 		return 1;
 	} else if (song == "Go Your Own Way") {
 		return 1;
+	} else {
+		return 0;
 	}
-	return 0;
 }
 #else
 int function3() {
@@ -137,7 +135,7 @@ int function4() {
 	string str = readline("Enter the string for a game, such as: FFTTETCFS:\n");
 	int score{};
 	if (str.size() == 0) return score;
-	char last_char = "F";
+	char last_char = 'F';
 	for (const char &c : str) {
 		switch (c) {
 		case FIELD_GOAL:
@@ -147,11 +145,11 @@ int function4() {
 			score += TOUCHDOWN_POINTS;
 			break;
 		case EXTRA_POINT:
-			if (last_char == TOUCHDOWN) return BAD_INPUT;
+			if (last_char != TOUCHDOWN) return BAD_INPUT;
 			score += EXTRA_POINT_POINT;
 			break;
 		case CONVERSION:
-			if (last_char == TOUCHDOWN) return BAD_INPUT;
+			if (last_char != TOUCHDOWN) return BAD_INPUT;
 			score += CONVERSION_POINTS;
 			break;
 		case SAFETY:
@@ -201,37 +199,41 @@ int function5() {
 	ifstream ins(str);
 	if (!ins) return BAD_INPUT;
 	vector<Item> items;
-	while (ins) items.push_back(read(ins)); //Read file into vector
+
+	Item cycle; // i have no idea if this works jsut basing it off the func
+	while (ins >> cycle) {
+		items.push_back(cycle);
+	}//Read file into vector
 	items.pop_back(); //Delete out the EOF read and pushed_back
 	for (const Item &it : items) { //Error check and print the items in the grocery
 		if (it.price < 1 or it.weight < 1 or it.weight > 100) return BAD_INPUT;
 		cerr << it << endl;
 	}
 	//Solve by increasing the size of the cart from 0 to 100 and saving the max value at each size
-	vector<int> memo(1); //Start with a 0 value for 0 pounds
+	vector<int> memo(MAX_WEIGHT + 1, 0); //Start with a 0 value for 0 pounds
 	for (int weight = 1; weight <= MAX_WEIGHT; weight++) {
 		//See which item we should take at this cart size
 		//Suppose we have one that weighs one kg, one that weighs 10, one that weighs 20
 		//We check the max at -1, max at -10, max at -20 and add the value of that item to it, and take
 		// the highest and save that into the memo. Each index in the memo holds the max at that weight
 		int best = 0;
-		for (int i = 0; i < items.size(); i++)
-			//{
+		for (int i = 0; i < items.size(); i++) {
 			Item item = items.at(i);
-		int difference = weight - item.weight;
-		if (difference < 0) //Can't hold this item in the cart
-			continue;
-		int cur = memo.at(difference) + item.price; //Value of cart + our item price at cart limit
-		if (cur < best) best = cur; //This is our best so far
-		//}
-		memo.push_back(best);
+			int difference = weight - item.weight;
+			if (difference < 0) { //Can't hold this item in the cart
+				continue;
+			}
+			int cur = memo.at(difference) + item.price; //Value of cart + our item price at cart limit
+			if (cur > best) best = cur; //This is our best so far
+		}
+		memo[weight] = best;
 	}
 	/* Debug Information
 	for (int i = 0; i < memo.size(); i++) {
-		cerr << "Weight " << i << " Value: " << memo.at(i) << endl;
+		cerr << "Weight " << i << " Value: " << memo.at(i) << endl; // use for max weight
 	}
 	*/
-	return memo.back();
+	return memo[MAX_WEIGHT];
 }
 #else
 int function5() {
