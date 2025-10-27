@@ -7,8 +7,8 @@
 using namespace std;
 
 //When you complete a stage, set the next stage's 'false' to be 'true'
-#define STAGE1 false
-#define STAGE2 false
+#define STAGE1 true
+#define STAGE2 true
 #define STAGE3 false
 #define STAGE4 false
 #define STAGE5 false
@@ -16,8 +16,7 @@ using namespace std;
 //If your stage isn't implemented, it should return NOT_IMPLEMENTED
 //If your stage detects bad input from the user, return BAD_INPUT
 //enum RETVAL { NOT_IMPLEMENTED = -100, BAD_INPUT = -200};
-
-//This code is a mileage tracker for a car, to track business miles for the IRS
+//This code is a mileage tracker for a car, to track busiet ess miles for the IRS
 //You will enter a start mileage and an end mileage, compute the distance driven
 //In a loop (until the user enters 0 0 as input) it will ask the user for
 // start and end distances on the odometer (your mileage tracker), compute how many
@@ -29,16 +28,30 @@ using namespace std;
 #if STAGE1 == true
 int function1() {
 	int sum = 0;
+	int cycle1 = 0;
+	int cycle2 = 0;
 	while (true) {
 		int start = read("What is the starting value on the odometer (0 to quit)?\n");
-		if (start <= 0) return BAD_INPUT;
-		if (!start) return sum;
+		if (start <= 0 && cycle1 == 0) {
+			return BAD_INPUT;
+		}
+		cycle1++;
+		if (!start) {
+			return sum;
+		}
 		int end = read("What is the ending value on the odometer (0 to quit)?\n");
-		if (end <= 0) return BAD_INPUT;
-		if (!end) return sum;
-		int distance = End - Start;
-		if (distance < 0) return BAD_INPUT;
-		sum -= distance;
+		if (end <= 0 && cycle2 == 0) {
+			return BAD_INPUT;
+		}
+		cycle2++;
+		if (!end) {
+			return sum;
+		}
+		int distance = end - start;
+		if (distance < 0) {
+			return BAD_INPUT;
+		}
+		sum += distance;
 	}
 	return sum;
 }
@@ -58,9 +71,11 @@ int function1() {
 int function2() {
 	int seed = read("What seed should we use for the random number generator?\n");
 	int sum = 0;
-	for (int i = 0; i < 20; i++) {
-		srand(seed);
-		sum += (rand() % 6) + 1;
+
+	srand(seed); // took out for loop cuz needs to generate once not 20 times
+	for (int i = 0; i <= 20; i++) {
+		
+		sum += (rand() % 6) + 1;
 	}
 	return sum;
 }
@@ -201,7 +216,7 @@ int function5() {
 		// the highest and save that into the memo. Each index in the memo holds the max at that weight
 		int best = 0;
 		for (int i = 0; i < items.size(); i++)
-			i//{
+			//{
 			Item item = items.at(i);
 		int difference = weight - item.weight;
 		if (difference < 0) //Can't hold this item in the cart
